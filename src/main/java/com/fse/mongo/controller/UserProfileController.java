@@ -37,7 +37,8 @@ public class UserProfileController {
     }
     @PostMapping("/criteria")
     public List<User> findAll(@RequestBody Criteria criteria) throws JsonProcessingException {
-        String aIdExpression = (criteria.associateId != null && !criteria.associateId.isBlank())? "'associateId':'"+criteria.associateId+",'":"" ;
+        //String aIdExpression = (criteria.associateId != null && !criteria.associateId.isBlank())? "'associateId':'"+criteria.associateId+"'":"" ;
+        String aIdExpression = (criteria.associateId != null && !criteria.associateId.isBlank())? "'associateId':{'$regex':'^"+criteria.associateId+"','$options':'i'},":"" ;
         BasicQuery bq = new BasicQuery("{'name':{'$regex':'^"+criteria.name+"','$options':'i'},"+aIdExpression+"skill:{$elemMatch:{'skillName':'"+criteria.skillName+"','expertiseLevel':{'$gte':10}}}}");
         return mongoTemplate.find(bq,User.class);
     }
